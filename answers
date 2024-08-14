@@ -1,0 +1,48 @@
+Oto odpowiedzi na podane pytania:
+
+A string value of the PDF filename is not passed to the PyPDF2 .PdfFileReader() function. What do you pass to the function instead?
+
+Zamiast nazwy pliku w formie łańcucha znaków, do funkcji PdfFileReader() przekazujesz obiekt pliku (otwarty w trybie binarnym).
+What modes do the File objects for PdfFileReader() and PdfFileWriter() need to be opened in?
+
+PdfFileReader(): Plik powinien być otwarty w trybie binarnym do odczytu, czyli 'rb'.
+PdfFileWriter(): Plik powinien być otwarty w trybie binarnym do zapisu, czyli 'wb'.
+How do you acquire a Page object for page 5 from a PdfFileReader object?
+
+Używasz metody getPage(4) na obiekcie PdfFileReader, gdzie 4 oznacza piątą stronę (indeksowanie stron zaczyna się od 0).
+What PdfFileReader variable stores the number of pages in the PDF document?
+
+Liczbę stron w dokumencie PDF przechowuje zmienna numPages.
+If a PdfFileReader object’s PDF is encrypted with the password swordfish, what must you do before you can obtain Page objects from it?
+
+Musisz wywołać metodę decrypt('swordfish') na obiekcie PdfFileReader, aby odszyfrować plik przed uzyskaniem obiektów Page.
+What methods do you use to rotate a page?
+
+Możesz użyć metod rotateClockwise() lub rotateCounterClockwise() na obiekcie Page.
+What method returns a Document object for a file named demo.docx?
+
+Używasz metody docx.Document('demo.docx'), aby załadować plik i uzyskać obiekt Document.
+What is the difference between a Paragraph object and a Run object?
+
+Paragraph: Reprezentuje jeden akapit w dokumencie.
+Run: Jest to fragment tekstu w akapicie, który ma wspólne formatowanie (np. pogrubienie, kursywa).
+How do you obtain a list of Paragraph objects for a Document object that’s stored in a variable named doc?
+
+Używasz doc.paragraphs, aby uzyskać listę obiektów Paragraph.
+What type of object has bold, underline, italic, strike, and outline variables?
+
+Obiekt typu Run posiada te właściwości.
+What is the difference between setting the bold variable to True, False, or None?
+
+True: Ustawia tekst na pogrubiony.
+False: Usuwa pogrubienie z tekstu.
+None: Nie zmienia obecnego stanu pogrubienia (dziedziczy styl).
+How do you create a Document object for a new Word document?
+
+Używasz docx.Document() do stworzenia nowego obiektu Document.
+How do you add a paragraph with the text 'Hello, there!' to a Document object stored in a variable named doc?
+
+Używasz doc.add_paragraph('Hello, there!'), aby dodać nowy akapit z tekstem do dokumentu.
+What integers represent the levels of headings available in Word documents?
+
+Poziomy nagłówków są reprezentowane przez liczby całkowite od 0 do 4, gdzie 0 to główny tytuł, a 1 do 4 to poziomy nagłówków od najważniejszego do najmniej ważnego.
