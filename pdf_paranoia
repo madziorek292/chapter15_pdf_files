@@ -1,0 +1,113 @@
+import os
+import PyPDF2
+import sys
+
+def encrypt_pdfs(folder, password):
+    # Przejdź przez wszystkie pliki w folderze i jego podfolderach
+    for foldername, subfolders, filenames in os.walk(folder):
+        for filename in filenames:
+            # Sprawdź, czy plik jest PDF-em
+            if filename.endswith('.pdf'):
+                file_path = os.path.join(foldername, filename)
+
+                # Otwórz plik PDF
+                with open(file_path, 'rb') as pdf_file:
+                    reader = PyPDF2.PdfReader(pdf_file)
+                    writer = PyPDF2.PdfWriter()
+
+                    # Skopiuj zawartość do nowego obiektu PdfWriter
+                    for page_num in range(len(reader.pages)):
+                        writer.add_page(reader.pages[page_num])
+
+                    # Szyfruj PDF
+                    writer.encrypt(password)
+
+                    # Zapisz zaszyfrowany plik z nową nazwą
+                    encrypted_file_path = file_path[:-4] + '_encrypted.pdf'
+                    with open(encrypted_file_path, 'wb') as encrypted_pdf:
+                        writer.write(encrypted_pdf)
+
+                # Sprawdź, czy szyfrowanie było poprawne
+                with open(encrypted_file_path, 'rb') as pdf_file:
+                    reader = PyPDF2.PdfReader(pdf_file)
+                    if reader.is_encrypted:
+                        try:
+                            reader.decrypt(password)
+                            reader.pages[0]  # Próbuj odczytać pierwszą stronę
+                        except:
+                            print(f"Failed to decrypt: {encrypted_file_path}")
+                            continue
+
+                # Usuń oryginalny plik PDF
+                os.remove(file_path)
+
+if __name__ == '__main__':
+    folder_to_encrypt = sys.argv[1]  # Ścieżka do folderu jako pierwszy argument wiersza poleceń
+    encryption_password = sys.argv[2]  # Hasło jako drugi argument wiersza poleceń
+    encrypt_pdfs(folder_to_encrypt, encryption_password)
+
+
+
+import os
+import PyPDF2
+import sys
+
+def decrypt_pdfs(folder, password):
+    # Przejdź przez wszystkie pliki w folderze i jego podfolderach
+    for foldername, subfolders, filenames in os.walk(folder):
+        for filename in filenames:
+            # Sprawdź, czy plik jest zaszyfrowanym PDF-em
+            if filename.endswith('_encrypted.pdf'):
+                file_path = os.path.join(foldername, filename)
+
+                # Otwórz plik PDF
+                with open(file_path, 'rb') as pdf_file:
+                    reader = PyPDF2.PdfReader(pdf_file)
+
+                    if reader.is_encrypted:
+                        try:
+                            reader.decrypt(password)
+                            writer = PyPDF2.PdfWriter()
+
+                            # Skopiuj zawartość do nowego obiektu PdfWriter
+                            for page_num in range(len(reader.pages)):
+                                writer.add_page(reader.pages[page_num])
+
+                            # Zapisz odszyfrowany plik z nową nazwą
+                            decrypted_file_path = file_path.replace('_encrypted.pdf', '_decrypted.pdf')
+                            with open(decrypted_file_path, 'wb') as decrypted_pdf:
+                                writer.write(decrypted_pdf)
+                        except:
+                            print(f"Incorrect password for: {file_path}")
+                            continue
+
+if __name__ == '__main__':
+    folder_to_decrypt = sys.argv[1]  # Ścieżka do folderu jako pierwszy argument wiersza poleceń
+    decryption_password = sys.argv[2]  # Hasło jako drugi argument wiersza poleceń
+    decrypt_pdfs(folder_to_decrypt, decryption_password)
+
+#Wyjaśnienie
+#Część 1 (Szyfrowanie):
+
+#Skrypt przechodzi przez wszystkie pliki PDF w podanym folderze i jego podfolderach.
+#Otwiera każdy PDF, kopiuje jego zawartość do nowego obiektu PdfWriter, szyfruje go i zapisuje pod nową nazwą z sufiksem _encrypted.pdf.
+#Następnie, skrypt sprawdza, czy zaszyfrowany plik można odszyfrować podanym hasłem, aby upewnić się, że proces szyfrowania przebiegł poprawnie.
+#Jeśli wszystko jest w porządku, oryginalny plik PDF jest usuwany.
+#Część 2 (Odszyfrowywanie):
+
+#Skrypt przechodzi przez wszystkie pliki PDF w podanym folderze i jego podfolderach.
+#Wyszukuje pliki z sufiksem _encrypted.pdf, próbuje je odszyfrować podanym hasłem, a następnie zapisuje odszyfrowany plik z sufiksem _decrypted.pdf.
+#Jeśli hasło jest nieprawidłowe, skrypt wypisuje komunikat i przechodzi do następnego pliku.
+#Użycie
+#Aby uruchomić skrypty, użyj wiersza poleceń:
+
+#Szyfrowanie:
+
+#bash
+#Skopiuj kod
+#python encrypt_pdfs.py <folder_path> <password>
+#Odszyfrowywanie:
+
+#bash
+#Skopiuj kod
+#python decrypt_pdfs.py <folder_path> <password>
