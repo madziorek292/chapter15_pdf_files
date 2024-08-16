@@ -1,0 +1,46 @@
+from docx import Document
+from docx.shared import Pt
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.enum.section import WD_SECTION
+
+# Wczytanie listy gości z pliku tekstowego
+with open('guests.txt', 'r') as file:
+    guests = file.readlines()
+
+# Tworzenie nowego dokumentu Word
+doc = Document()
+
+# Iteracja przez listę gości
+for guest in guests:
+    guest = guest.strip()
+    
+    # Dodanie tytułu zaproszenia
+    title = doc.add_paragraph('Zaproszenie')
+    title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    title.style.font.size = Pt(24)
+    
+    # Dodanie tekstu zaproszenia
+    invitation_text = f"Szanowny/a {guest},\n\nSerdecznie zapraszamy na uroczyste przyjęcie."
+    paragraph = doc.add_paragraph(invitation_text)
+    paragraph.style.font.size = Pt(12)
+    paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+    
+    # Dodanie podziału strony
+    doc.add_page_break()
+
+# Zapisanie dokumentu
+doc.save('invitations.docx')
+
+
+#Wyjaśnienie kodu
+#Wczytanie listy gości: Plik tekstowy guests.txt jest otwierany i wczytywany linia po linii. Każda linia reprezentuje jedno nazwisko.
+
+#Tworzenie dokumentu: Za pomocą Document() tworzymy nowy dokument Word.
+
+#Dodanie tytułu zaproszenia: Dla każdego gościa dodajemy paragraf z tekstem „Zaproszenie”. Paragraf ten jest wyśrodkowany, a jego rozmiar czcionki ustawiony na 24 punkty.
+
+#Dodanie tekstu zaproszenia: Następnie dodajemy paragraf z głównym tekstem zaproszenia, gdzie personalizujemy tekst, używając imienia i nazwiska gościa. Tekst jest wyrównany do lewej i ma rozmiar czcionki 12 punktów.
+
+#Dodanie podziału strony: Na koniec, po każdym zaproszeniu, dodajemy podział strony (doc.add_page_break()), aby każde zaproszenie znajdowało się na osobnej stronie.
+
+#Zapisanie dokumentu: Po przetworzeniu wszystkich gości dokument jest zapisywany jako invitations.docx.
