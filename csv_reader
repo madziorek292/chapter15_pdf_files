@@ -1,0 +1,47 @@
+import csv
+import os
+
+# Utworzenie folderu, w którym będą przechowywane pliki CSV bez nagłówków
+os.makedirs('headerRemoved', exist_ok=True)
+
+# Przeglądaj wszystkie pliki w bieżącym katalogu roboczym
+for csvFilename in os.listdir('.'):
+    # Pomiń pliki, które nie są plikami CSV
+    if not csvFilename.endswith('.csv'):
+        continue
+
+    print(f'Removing header from {csvFilename}...')
+
+    # Odczytanie zawartości pliku CSV (pomijając pierwszy wiersz)
+    csvRows = []
+    with open(csvFilename, 'r') as csvFileObj:
+        readerObj = csv.reader(csvFileObj)
+        for row in readerObj:
+            if readerObj.line_num == 1:
+                continue  # Pomiń pierwszy wiersz
+            csvRows.append(row)
+
+    # Zapisanie nowej zawartości pliku CSV do folderu 'headerRemoved'
+    with open(os.path.join('headerRemoved', csvFilename), 'w', newline='') as csvFileObj:
+        csvWriter = csv.writer(csvFileObj)
+        for row in csvRows:
+            csvWriter.writerow(row)
+#Wyjaśnienie kodu
+#Importowanie modułów: Na początku importujemy moduły csv i os, które umożliwiają pracę z plikami CSV oraz zarządzanie plikami i folderami w systemie.
+
+#Tworzenie folderu: os.makedirs('headerRemoved', exist_ok=True) tworzy folder headerRemoved, gdzie będą zapisywane nowe pliki CSV bez nagłówków. Jeśli folder już istnieje, nie zostanie utworzony ponownie.
+
+#Przegląd plików w katalogu: Pętla for csvFilename in os.listdir('.') przegląda wszystkie pliki w bieżącym katalogu roboczym. Pliki, które nie kończą się na .csv, są pomijane za pomocą continue.
+
+#Odczytanie zawartości pliku CSV:
+
+#Plik CSV jest otwierany za pomocą open(csvFilename, 'r').
+#Następnie tworzony jest obiekt csv.reader do odczytu zawartości pliku.
+#Pętla for row in readerObj przechodzi przez każdy wiersz pliku CSV.
+#Pierwszy wiersz jest pomijany za pomocą if readerObj.line_num == 1.
+#Zapisanie nowej zawartości pliku CSV:
+
+#Nowa zawartość pliku CSV (bez nagłówka) jest zapisywana do nowego pliku w folderze headerRemoved.
+#Plik jest zapisywany przy użyciu obiektu csv.writer.
+#Jak działa program
+#Po uruchomieniu programu, pliki CSV w bieżącym katalogu zostaną przetworzone, a ich zawartość (bez pierwszego wiersza) zostanie zapisana do nowych plików w folderze headerRemoved. Program wypisuje komunikaty o przetwarzanych plikach, co pozwala śledzić jego działanie.
